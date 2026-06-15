@@ -5,16 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daqw's Shop | Premium Marketplace</title>
     <style>
-        /* Sanfte Lade-Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes floatParticles {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-15px) rotate(3deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
 
         body {
@@ -27,16 +26,15 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            user-select: none; /* Verhindert das nervige Markieren von Text beim Klicken! */
+            -webkit-user-select: none;
         }
 
-        /* Schwebender Hintergrund */
         body::before {
             content: "";
             position: absolute;
-            width: 150%;
-            height: 150%;
+            width: 100%;
+            height: 100%;
             background-image: radial-gradient(rgba(88, 101, 242, 0.12) 1.5px, transparent 1.5px);
             background-size: 50px 50px;
             opacity: 0.6;
@@ -44,6 +42,7 @@
             z-index: 0;
             top: 0;
             left: 0;
+            pointer-events: none;
         }
 
         .container {
@@ -59,7 +58,7 @@
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             max-width: 800px;
             width: 100%;
-            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: fadeIn 0.8s ease-out forwards;
             box-sizing: border-box;
         }
 
@@ -81,10 +80,14 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             margin: 5px 0 30px 0;
-            text-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
         }
 
-        /* Spiele-Auswahl (Jetzt als unzerstörbare Links) */
+        /* Versteckte Radio-Buttons für die Logik */
+        input[type="radio"] {
+            display: none;
+        }
+
+        /* Die Tabs als Klick-Labels */
         .category-select {
             display: flex;
             justify-content: center;
@@ -92,7 +95,7 @@
             margin-bottom: 40px;
         }
 
-        .tab-btn {
+        .tab-label {
             display: block;
             background: #2b2d31;
             color: #949ba4;
@@ -102,32 +105,35 @@
             font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             width: 45%;
             box-sizing: border-box;
+            text-align: center;
         }
 
-        .tab-btn:hover {
+        .tab-label:hover {
             transform: translateY(-3px);
             border-color: #5865f2;
             color: #ffffff;
-            box-shadow: 0 10px 20px rgba(88, 101, 242, 0.15);
         }
 
-        .tab-btn.active {
+        /* CSS-Logik: Wenn Radio ausgewählt ist, färbe das zugehörige Label ein */
+        #trigger-mm2:checked ~ .category-select .label-mm2,
+        #trigger-bladeball:checked ~ .category-select .label-bladeball {
             background: #5865f2;
             color: #ffffff;
             box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
             border-color: #5865f2;
         }
 
-        /* Seiten-Umschaltung */
+        /* Standardmäßig alle Seiten verstecken */
         .shop-page {
             display: none;
         }
 
-        .shop-page.active {
+        /* CSS-Logik: Zeige nur die ausgewählte Seite an */
+        #trigger-mm2:checked ~ #mm2,
+        #trigger-bladeball:checked ~ #bladeball {
             display: block;
             animation: fadeIn 0.4s ease-out forwards;
         }
@@ -139,14 +145,13 @@
             margin-top: 20px;
         }
 
-        /* Item-Karten Design */
         .item-card {
             background: linear-gradient(145deg, #1e1f22, #141517);
             border: 1px solid rgba(255,255,255,0.03);
             border-radius: 16px;
             padding: 22px;
             text-align: center;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -167,14 +172,12 @@
             justify-content: center;
             font-size: 2.5rem;
             margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.02);
         }
 
         .item-card h4 {
             margin: 0 0 5px 0;
             color: #ffffff;
             font-size: 1.25rem;
-            font-weight: 700;
         }
 
         .item-price {
@@ -184,7 +187,6 @@
             margin-bottom: 18px;
         }
 
-        /* Bestell-Button */
         .btn-buy {
             display: block;
             background: #23a55a;
@@ -200,7 +202,6 @@
         .btn-buy:hover {
             background: #1a7f43;
             box-shadow: 0 0 15px rgba(35, 165, 90, 0.5);
-            transform: scale(1.02);
         }
     </style>
 </head>
@@ -210,14 +211,18 @@
         <h1>Daqw's Shop</h1>
         <p class="subtitle">Premium Marketplace</p>
 
-        <!-- Spiele-Auswahl (Jetzt als feste, klickbare Links) -->
+        <!-- Die unsichtbaren Schalter -->
+        <input type="radio" id="trigger-mm2" name="shop-tab" checked>
+        <input type="radio" id="trigger-bladeball" name="shop-tab">
+
+        <!-- Die Klick-Buttons (Labels steuern die unsichtbaren Radio-Schalter) -->
         <div class="category-select">
-            <a href="#" id="btn-mm2" class="tab-btn active" onclick="openGame(event, 'mm2')">🔪 Murder Mystery 2</a>
-            <a href="#" id="btn-bladeball" class="tab-btn" onclick="openGame(event, 'bladeball')">⚔️ Blade Ball</a>
+            <label for="trigger-mm2" class="tab-label label-mm2">🔪 Murder Mystery 2</label>
+            <label for="trigger-bladeball" class="tab-label label-bladeball">⚔️ Blade Ball</label>
         </div>
 
         <!-- ================= MM2 KATALOG ================= -->
-        <div id="mm2" class="shop-page active">
+        <div id="mm2" class="shop-page">
             <div class="items-grid">
                 
                 <div class="item-card">
@@ -264,29 +269,6 @@
         </div>
 
     </div>
-
-    <!-- Schusssicheres Umschalt-Script -->
-    <script>
-        function openGame(e, gameId) {
-            e.preventDefault(); // Verhindert, dass die Seite nach oben springt
-            
-            // Alle Seiten unsichtbar machen
-            var pages = document.getElementsByClassName("shop-page");
-            for (var i = 0; i < pages.length; i++) {
-                pages[i].classList.remove("active");
-            }
-            
-            // Alle Tabs auf inaktiv setzen
-            var tabs = document.getElementsByClassName("tab-btn");
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove("active");
-            }
-            
-            // Gewählte Seite anzeigen und Tab einfärben
-            document.getElementById(gameId).classList.add("active");
-            e.currentTarget.classList.add("active");
-        }
-    </script>
 
 </body>
 </html>
