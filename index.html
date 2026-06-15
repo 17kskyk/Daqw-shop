@@ -3,12 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blurr's Shop | MM2 & Blade Ball</title>
+    <title>Daqw's Shop | Premium Gaming Marketplace</title>
     <style>
-        /* Modernes, dunkles Discord-Design */
+        /* Animationen für den Next-Level-Look */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(88, 101, 242, 0.85); transform: scale(1.02); }
+            100% { box-shadow: 0 0 15px rgba(88, 101, 242, 0.4); transform: scale(1); }
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1f22;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at center, #1a1b1e 0%, #0b0c0d 100%);
             color: #dbdee1;
             margin: 0;
             padding: 0;
@@ -16,97 +33,146 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            overflow: hidden;
+            position: relative;
         }
 
+        /* Animierter Partikel-Hintergrund */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background-image: radial-gradient(rgba(88, 101, 242, 0.15) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+            animation: floatParticles 15s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        /* Haupt-Box mit Glassmorphismus & Neon-Rahmen */
         .container {
+            position: relative;
+            z-index: 1;
             text-align: center;
-            background-color: #2b2d31;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-            max-width: 500px;
+            background: rgba(30, 31, 34, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 50px 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(88, 101, 242, 0.2);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            max-width: 550px;
             width: 90%;
+            animation: fadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
         h1 {
             color: #ffffff;
-            margin-bottom: 10px;
-            font-size: 2.5rem;
+            margin: 0 0 5px 0;
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #b5bac1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            color: #949ba4;
-            font-size: 1.1rem;
-            margin-bottom: 30px;
+            color: #5865f2;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            text-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
         }
 
         .games-container {
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 40px;
+            justify-content: space-between;
+            margin-bottom: 45px;
+            gap: 20px;
         }
 
+        /* Stylische Spiele-Karten */
         .game-card {
-            background-color: #111214;
-            padding: 15px;
-            border-radius: 8px;
-            width: 40%;
-            border: 1px solid #35363c;
+            background: linear-gradient(145deg, #2b2d31, #1e1f22);
+            padding: 25px 20px;
+            border-radius: 16px;
+            width: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Hover-Effekt wie bei High-End Webseiten */
+        .game-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(88, 101, 242, 0.6);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(88, 101, 242, 0.1);
+            background: linear-gradient(145deg, #313338, #232428);
         }
 
         .game-card h3 {
-            margin: 0 0 5px 0;
-            color: #f2f3f5;
+            margin: 0 0 8px 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         .game-card p {
             margin: 0;
-            font-size: 0.9rem;
-            color: #b5bac1;
+            font-size: 0.95rem;
+            color: #949ba4;
         }
 
+        /* Einladender, animierter Button */
         .btn-discord {
             display: inline-block;
             background-color: #5865f2;
             color: white;
             text-decoration: none;
-            padding: 15px 30px;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: background-color 0.2s, transform 0.1s;
+            padding: 18px 38px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.15rem;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            animation: pulseGlow 3s ease-in-out infinite;
         }
 
         .btn-discord:hover {
             background-color: #4752c4;
-            transform: translateY(-2px);
+            box-shadow: 0 0 40px rgba(88, 101, 242, 0.8);
+            animation: none; /* Stoppt das automatische Pulsieren beim Drüberfahren für manuelle Kontrolle */
+            transform: scale(1.04);
         }
 
         .btn-discord:active {
-            transform: translateY(0);
+            transform: scale(0.98);
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Blurr's Shop</h1>
-        <p class="subtitle">Der sicherste Ort für deine Ingame-Items</p>
+        <h1>Daqw's Shop</h1>
+        <p class="subtitle">Premium Marketplace</p>
 
         <div class="games-container">
             <div class="game-card">
                 <h3>🔪 MM2</h3>
-                <p>Godlys & mehr</p>
+                <p>Godlys & Sets</p>
             </div>
             <div class="game-card">
                 <h3>⚔️ Blade Ball</h3>
-                <p>Skins & Abilities</p>
+                <p>Skins & Skills</p>
             </div>
         </div>
 
-        <!-- ERSETZE DEN LINK UNTEN MIT DEINEM ECHTEN DISCORD-EINLADUNGSLINK -->
+        <!-- Dein Live-Discord Link ist hier fest verbaut -->
         <a href="https://discord.gg/F9Z7XbBCEy" target="_blank" class="btn-discord">
-            💬 Tritt unserem Discord bei
+            🌐 Enter Marketplace
         </a>
     </div>
 
