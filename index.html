@@ -5,9 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daqw's Shop | Premium Marketplace</title>
     <style>
+        /* Sanfte Lade-Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes floatParticles {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
         }
 
         body {
@@ -20,27 +27,48 @@
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Schwebender Hintergrund */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background-image: radial-gradient(rgba(88, 101, 242, 0.12) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            opacity: 0.6;
+            animation: floatParticles 15s ease-in-out infinite;
+            z-index: 0;
+            top: 0;
+            left: 0;
         }
 
         .container {
+            position: relative;
+            z-index: 1;
             text-align: center;
             background: rgba(30, 31, 34, 0.85);
             backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             padding: 40px;
             border-radius: 24px;
             border: 1px solid rgba(88, 101, 242, 0.2);
             box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
             max-width: 800px;
             width: 100%;
-            animation: fadeIn 0.8s ease-out forwards;
+            animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
             box-sizing: border-box;
         }
 
         h1 {
             color: #ffffff;
             margin: 0;
-            font-size: 2.8rem;
+            font-size: 3rem;
             font-weight: 800;
+            letter-spacing: -1.5px;
             background: linear-gradient(180deg, #ffffff 0%, #b5bac1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -53,9 +81,10 @@
             text-transform: uppercase;
             letter-spacing: 3px;
             margin: 5px 0 30px 0;
+            text-shadow: 0 0 10px rgba(88, 101, 242, 0.3);
         }
 
-        /* Spiele-Auswahl Buttons */
+        /* Spiele-Auswahl (Jetzt als unzerstörbare Links) */
         .category-select {
             display: flex;
             justify-content: center;
@@ -64,38 +93,43 @@
         }
 
         .tab-btn {
+            display: block;
             background: #2b2d31;
-            color: #ffffff;
+            color: #949ba4;
             border: 1px solid rgba(255,255,255,0.05);
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 20px;
+            font-size: 1.15rem;
             font-weight: 700;
             border-radius: 12px;
             cursor: pointer;
+            text-decoration: none;
             transition: all 0.3s ease;
             width: 45%;
+            box-sizing: border-box;
         }
 
         .tab-btn:hover {
             transform: translateY(-3px);
             border-color: #5865f2;
+            color: #ffffff;
             box-shadow: 0 10px 20px rgba(88, 101, 242, 0.15);
         }
 
         .tab-btn.active {
             background: #5865f2;
+            color: #ffffff;
             box-shadow: 0 0 20px rgba(88, 101, 242, 0.4);
             border-color: #5865f2;
         }
 
-        /* Item-Grid Ansicht */
+        /* Seiten-Umschaltung */
         .shop-page {
             display: none;
-            animation: fadeIn 0.5s ease-out forwards;
         }
 
         .shop-page.active {
             display: block;
+            animation: fadeIn 0.4s ease-out forwards;
         }
 
         .items-grid {
@@ -105,56 +139,58 @@
             margin-top: 20px;
         }
 
-        /* Die Item-Karten */
+        /* Item-Karten Design */
         .item-card {
-            background: #1e1f22;
+            background: linear-gradient(145deg, #1e1f22, #141517);
             border: 1px solid rgba(255,255,255,0.03);
             border-radius: 16px;
-            padding: 20px;
+            padding: 22px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .item-card:hover {
-            transform: translateY(-5px);
-            border-color: rgba(88, 101, 242, 0.4);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            transform: translateY(-8px);
+            border-color: rgba(88, 101, 242, 0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
         }
 
-        /* Platzhalter für Item-Bilder (Optional) */
         .item-image-placeholder {
             height: 100px;
             background: #111214;
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.02);
         }
 
         .item-card h4 {
             margin: 0 0 5px 0;
             color: #ffffff;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
         }
 
         .item-price {
-            color: #23a55a; /* Discord Grün für Preise */
+            color: #23a55a;
             font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 15px;
+            font-size: 1.15rem;
+            margin-bottom: 18px;
         }
 
-        /* Bestellen Button */
+        /* Bestell-Button */
         .btn-buy {
+            display: block;
             background: #23a55a;
             color: white;
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 12px 15px;
             border-radius: 8px;
             font-weight: 700;
             font-size: 0.95rem;
@@ -163,7 +199,8 @@
 
         .btn-buy:hover {
             background: #1a7f43;
-            box-shadow: 0 0 15px rgba(35, 165, 90, 0.4);
+            box-shadow: 0 0 15px rgba(35, 165, 90, 0.5);
+            transform: scale(1.02);
         }
     </style>
 </head>
@@ -173,17 +210,16 @@
         <h1>Daqw's Shop</h1>
         <p class="subtitle">Premium Marketplace</p>
 
-        <!-- Spiele-Auswahl (Tabs) -->
+        <!-- Spiele-Auswahl (Jetzt als feste, klickbare Links) -->
         <div class="category-select">
-            <button class="tab-btn active" onclick="openGame('mm2')">🔪 Murder Mystery 2</button>
-            <button class="tab-btn" onclick="openGame('bladeball')">⚔️ Blade Ball</button>
+            <a href="#" id="btn-mm2" class="tab-btn active" onclick="openGame(event, 'mm2')">🔪 Murder Mystery 2</a>
+            <a href="#" id="btn-bladeball" class="tab-btn" onclick="openGame(event, 'bladeball')">⚔️ Blade Ball</a>
         </div>
 
         <!-- ================= MM2 KATALOG ================= -->
         <div id="mm2" class="shop-page active">
             <div class="items-grid">
                 
-                <!-- Item 1 -->
                 <div class="item-card">
                     <div>
                         <div class="item-image-placeholder">🍬</div>
@@ -191,12 +227,10 @@
                     </div>
                     <div>
                         <div class="item-price">5.00 €</div>
-                        <!-- Ändere hinten nach text= was im Discord-Chat stehen soll -->
-                        <a href="https://discord.com/channels/1251581452817207438/1251581453316198471?text=I%20want%20to%20buy:%20Candy%20Set" target="_blank" class="btn-buy">🛒 Order via Discord</a>
+                        <a href="https://discord.gg/F9Z7XbBCEy" target="_blank" class="btn-buy">🛒 Order via Discord</a>
                     </div>
                 </div>
 
-                <!-- Item 2 -->
                 <div class="item-card">
                     <div>
                         <div class="item-image-placeholder">🦇</div>
@@ -204,7 +238,7 @@
                     </div>
                     <div>
                         <div class="item-price">3.50 €</div>
-                        <a href="https://discord.com/channels/1251581452817207438/1251581453316198471?text=I%20want%20to%20buy:%20Batwing" target="_blank" class="btn-buy">🛒 Order via Discord</a>
+                        <a href="https://discord.gg/F9Z7XbBCEy" target="_blank" class="btn-buy">🛒 Order via Discord</a>
                     </div>
                 </div>
 
@@ -215,7 +249,6 @@
         <div id="bladeball" class="shop-page">
             <div class="items-grid">
                 
-                <!-- Item 1 -->
                 <div class="item-card">
                     <div>
                         <div class="item-image-placeholder">🔥</div>
@@ -223,7 +256,7 @@
                     </div>
                     <div>
                         <div class="item-price">8.00 €</div>
-                        <a href="https://discord.com/channels/1251581452817207438/1251581453316198471?text=I%20want%20to%20buy:%20Infinity%20Ability" target="_blank" class="btn-buy">🛒 Order via Discord</a>
+                        <a href="https://discord.gg/F9Z7XbBCEy" target="_blank" class="btn-buy">🛒 Order via Discord</a>
                     </div>
                 </div>
 
@@ -232,22 +265,26 @@
 
     </div>
 
-    <!-- Script für das Umschalten zwischen den Spielen -->
+    <!-- Schusssicheres Umschalt-Script -->
     <script>
-        function openGame(gameId) {
-            // Alle Seiten verstecken
+        function openGame(e, gameId) {
+            e.preventDefault(); // Verhindert, dass die Seite nach oben springt
+            
+            // Alle Seiten unsichtbar machen
             var pages = document.getElementsByClassName("shop-page");
             for (var i = 0; i < pages.length; i++) {
                 pages[i].classList.remove("active");
             }
-            // Alle Buttons deaktivieren
+            
+            // Alle Tabs auf inaktiv setzen
             var tabs = document.getElementsByClassName("tab-btn");
             for (var i = 0; i < tabs.length; i++) {
                 tabs[i].classList.remove("active");
             }
-            // Gewählte Seite & Button aktivieren
+            
+            // Gewählte Seite anzeigen und Tab einfärben
             document.getElementById(gameId).classList.add("active");
-            event.currentTarget.classList.add("active");
+            e.currentTarget.classList.add("active");
         }
     </script>
 
